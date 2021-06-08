@@ -1,2 +1,3 @@
 # vite-plugin-vue-crx3
-基于vite2+vue3开发chrome拓展（manifest v3），开发过程中支持插件热重载
+
+本 Vite 插件用于使用 vite2+vue3 开发 chrome 拓展（manifest v3），且支持开发过程中插件热重载
