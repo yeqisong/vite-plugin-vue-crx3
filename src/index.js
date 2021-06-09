@@ -5,13 +5,14 @@
  * npm run build 打包拓展文件，不会生成热重载所需的支持文件
  * 参考实现：https://github.com/StarkShang/vite-plugin-chrome-extension
  */
+import 'regenerator-runtime/runtime'
 import chalk from 'chalk'
 import { resolve } from 'path'
 import { ManifestProcessor } from './processors/manifest'
 import { clearEmptyDir } from './util/dir'
 import crtRealod from './reload'
 import { entryDef } from './entry'
-export default options => {
+export const crx3 =  options => {
     // 如果不是watch模式，不启用该插件
     if (process.env.npm_lifecycle_event !== 'watch' && process.env.npm_lifecycle_event !== 'build') {
         console.warn('\n', chalk.bold.yellow('vite-plugin-vue-crtv3 warn:'), chalk.yellow('请使用npm run watch 或 npm run build 启用vite-plugin-vue-crtv3，支持chrome extentsion 开发！'))
