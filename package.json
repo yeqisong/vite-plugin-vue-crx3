@@ -2,8 +2,8 @@
     "name": "vite-plugin-vue-crx3",
     "version": "1.0.0",
     "description": "本Vite插件用于使用vite2+vue3开发chrome拓展（manifest v3），且支持开发过程中插件热重载.",
-    "main": "lib/es/test.js",
-    "type": "module",
+    "main": "lib/cjs/index.js",
+    "module": "lib/es/index.js",
     "scripts": {
         "test": "test",
         "build": "rollup -c"
