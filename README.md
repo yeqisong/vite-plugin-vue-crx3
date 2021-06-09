@@ -14,7 +14,7 @@
 ### 1、安装插件
 
 ```bash
-npm i -D vite-plugin-vue-crx
+npm i -D vite-plugin-vue-crx3
 ```
 
 ### 2、一般开发项目结构
