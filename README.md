@@ -27,6 +27,7 @@ npm i -D vite-plugin-vue-crx3
 
 一般建议的开发目录结构如下，不强制要求：
 
+```text
 |-public // chrome 语言包放 public 里
 |-src
 |--|-manifest.json // 开发的入口文件，从中可解析真实的入口文件
@@ -43,6 +44,7 @@ npm i -D vite-plugin-vue-crx3
 |-vite.config.js
 |-package.json
 |-dist // 打包后的 Chrome 拓展源文件
+```
 
 ### 3、配置 vite.config.js
 
@@ -94,10 +96,8 @@ export default defineConfig({
 
 ```json
 "scripts": {
-    "watch": "vite build --watch",
-    "serve": "vite preview",
+    "watch": "vite build --watch", // 开发时使用
     "build": "vite build",
-    "dev": "vite"
 }
 ```
 
