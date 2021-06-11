@@ -121,7 +121,7 @@ export default defineConfig({
 
 ### v1.0
 
--   支持解析 manifest.json 配置的各类 js 和 html 入口文件。
+-   支持解析 manifest.json 配置的各类 js 和 html 入口文件，并验证文件有效性
 -   自动解析通过 chrome.scripting.insertCSS、chrome.scripting.executeScript 动态导入的资源文件和 js 文件。
 -   自动解析代码中调用的 Chrome API 并更新 manifest 中的权限（除 tabs、activeTab、webRequestBlocking、background 四个权限未处理）
 -   将 background、content_scripts 类 js 默认打包为 iife 模式（由于 Chrome 91+ 支持 background 使用 es 模具，固如果 manifest.json 中 background.type=module，则 background 不会进行 iife 打包）
