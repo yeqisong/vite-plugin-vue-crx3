@@ -5,7 +5,7 @@
  * npm run build 打包拓展文件，不会生成热重载所需的支持文件
  * 参考实现：https://github.com/StarkShang/vite-plugin-chrome-extension
  */
-// import 'regenerator-runtime/runtime'
+import 'regenerator-runtime/runtime'
 import chalk from 'chalk'
 import { resolve } from 'path'
 import { ManifestProcessor } from './processors/manifest'
