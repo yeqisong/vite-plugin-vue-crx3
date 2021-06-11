@@ -7,7 +7,7 @@ import { relative } from 'path'
 export const input2kuFunction = srcDir => {
     if (srcDir === null || typeof srcDir === 'undefined') {
         // This would be a config error, so should throw
-        throw new TypeError('srcDir is null or undefined')
+        throw new Error('[vite-plugin-vue-crx3 error] srcDir is null or undefined')
     }
     return (inputkv, file) => {
         // vite.config.js中input.name一般为输出目录的相对路径和文件名

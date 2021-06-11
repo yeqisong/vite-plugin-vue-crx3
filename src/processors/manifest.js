@@ -13,6 +13,7 @@ import { getAssets, getChunk } from '../util/bundle'
 import { entryDef } from '../entry'
 import { validateManifest } from '../manifest/validate'
 import { HtmlProcessor } from './html'
+import { canDo } from '../util/dir'
 // 同步读取manifest配置文件
 export const explorerSync = cosmiconfigSync('manifest', {
     cache: false
@@ -114,7 +115,7 @@ export class ManifestProcessor {
         }
         // 判断manifest.json是正确的文件名和后缀名
         if (basename(manifestPath) !== 'manifest.json') {
-            throw new TypeError("Input for a Chrome extension manifest must have filename 'manifest.json'.(In vite.config.js/build.rollupOptions.input)")
+            throw new Error("[vite-plugin-vue-crx3 error] Input for a Chrome extension manifest must have filename 'manifest.json'.(In vite.config.js/build.rollupOptions.input)")
         }
         return manifestPath
     }
@@ -126,7 +127,7 @@ export class ManifestProcessor {
     resolveInput (input) {
         // 如果不存在manifest或者没有manifest路径
         if (!this.manifest || !this.options.srcDir) {
-            throw new TypeError('manifest and options.srcDir not initialized')
+            throw new Error('[vite-plugin-vue-crx3 error] manifest or options.srcDir not initialized')
         }
         // 从manifest中获取全部静态资源定义
         const { js, html, css, img, others } = deriveFiles(
@@ -150,6 +151,12 @@ export class ManifestProcessor {
         //      'libs/popup': '/Users/yeqisong/Desktop/项目/chorme开发/pmwl/src/libs/popup.html',
         //      'libs/newtab': '/Users/yeqisong/Desktop/项目/chorme开发/pmwl/src/libs/newtab.html'
         // }
+        // 验证各文件路径是否可访问
+        ;([...Object.values(inputs), ...this.cache.assets]).forEach(fl => {
+            if (!canDo(fl)) {
+                throw new Error(`[vite-plugin-vue-crx3 error] "${fl}" defined in the manifest.json does not exist!`)
+            }
+        })
         this.backgroundProcessor.distDir(inputs, this.manifest)
         // 修正核心入口文件位置(contentjs[])
         this.contentScriptProcessor.distDir(inputs, this.manifest)
@@ -270,15 +277,15 @@ export class ManifestProcessor {
     _validateManifestContent (config) {
         // 配置文件为空
         if (config.isEmpty) {
-            throw new Error(`${config.filepath} is an empty file.`)
+            throw new Error(`[vite-plugin-vue-crx3 error] ${config.filepath} is an empty file.`)
         }
-        // manifest中关键配置信息验证 todo...
+        // manifest中关键配置信息验证(options_page和options_ui不能同时设置)
         const { options_page, options_ui } = config.config
         if (
             options_page !== undefined &&
             options_ui !== undefined
         ) {
-            throw new Error('options_ui and options_page cannot both be defined in manifest.json.')
+            throw new Error('[vite-plugin-vue-crx3 error] options_ui and options_page cannot both be defined in manifest.json.')
         }
     }
     /**

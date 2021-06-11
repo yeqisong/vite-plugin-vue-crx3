@@ -64,7 +64,7 @@ export class BackgroundProcessor {
      */
     resolveDynamicImports (plugin, code, id) {
         if (!this.options.srcDir) {
-            throw new TypeError('BackgroundProcesser: options.srcDir is not initialized')
+            throw new Error('[vite-plugin-vue-crx3 error] BackgroundProcesser: options.srcDir is not initialized')
         }
         // 动态导入的js文件
         const dynamicImports = []
@@ -101,7 +101,8 @@ export class BackgroundProcessor {
                     }
                     return fne
                 } else {
-                    return fileStr
+                    throw new Error(`[vite-plugin-vue-crx3 error] "${filePath}" from "chrome.scripting.executeScript" in background.js do not exist. it is must in the extension's root directory. `)
+                    // return fileStr
                 }
             })
         )
@@ -133,7 +134,8 @@ export class BackgroundProcessor {
                     }
                     return fne
                 } else {
-                    return fileStr
+                    throw new Error(`[vite-plugin-vue-crx3 error] "${filePath}" from "chrome.scripting.insetCSS" in background.js do not exist. it is must in the extension's root directory. `)
+                    // return fileStr
                 }
             })
         )

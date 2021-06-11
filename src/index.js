@@ -5,7 +5,7 @@
  * npm run build 打包拓展文件，不会生成热重载所需的支持文件
  * 参考实现：https://github.com/StarkShang/vite-plugin-chrome-extension
  */
-import 'regenerator-runtime/runtime'
+// import 'regenerator-runtime/runtime'
 import chalk from 'chalk'
 import { resolve } from 'path'
 import { ManifestProcessor } from './processors/manifest'
@@ -50,7 +50,7 @@ export const crx3 =  options => {
             await manifestProcessor.emitFiles(this)
             return null
         },
-        transform (code, id, ssr) {
+        transform (code = '', id, ssr) {
             return manifestProcessor.transform(this, code, id, ssr)
         },
         watchChange (id) {
@@ -71,7 +71,7 @@ export const crx3 =  options => {
         async closeBundle () {
             // 移动入口html
             await manifestProcessor.moveEntryHtml()
-            // 清理空目录
+            // // 清理空目录
             clearEmptyDir(resolve(viteConfig.build.outDir || 'dist'))
         }
     }, crtRealod({
