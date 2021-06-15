@@ -9,7 +9,7 @@ import 'regenerator-runtime/runtime'
 import chalk from 'chalk'
 import { resolve } from 'path'
 import { ManifestProcessor } from './processors/manifest'
-import { clearEmptyDir } from './util/dir'
+import { canDo, clearEmptyDir } from './util/dir'
 import crtRealod from './reload'
 import { entryDef } from './entry'
 export const crx3 =  options => {
@@ -24,6 +24,8 @@ export const crx3 =  options => {
     const pluginOption = { ...options }
     // manifest内容
     let manifest
+    // warn信息
+    const warns = []
     // manifest处理程序实例，处理并缓存manifest信息
     const manifestProcessor = new ManifestProcessor(pluginOption)
     return [{
@@ -50,6 +52,12 @@ export const crx3 =  options => {
             await manifestProcessor.emitFiles(this)
             return null
         },
+        resolveId (source) {
+            return manifestProcessor.resolveId(source)
+        },
+        load (id) {
+            return manifestProcessor.loadSource(id)
+        },
         transform (code = '', id, ssr) {
             return manifestProcessor.transform(this, code, id, ssr)
         },
@@ -65,6 +73,7 @@ export const crx3 =  options => {
             }
         },
         async generateBundle (options, bundle, isWrite) {
+            // console.log('----bundle:', bundle)
             // 输出入口js（iife）
             await manifestProcessor.generateBundle(this, bundle)
         },

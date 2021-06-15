@@ -14,6 +14,7 @@ import { entryDef } from '../entry'
 import { validateManifest } from '../manifest/validate'
 import { HtmlProcessor } from './html'
 import { canDo } from '../util/dir'
+import { uniqueId } from 'lodash'
 // 同步读取manifest配置文件
 export const explorerSync = cosmiconfigSync('manifest', {
     cache: false
@@ -37,7 +38,10 @@ export class ManifestProcessor {
         // dynamicImportContentCss    : [],
         permsHash                  : '',
         permissions                : [],
-        srcDir                     : null
+        srcDir                     : null,
+        // 不存在的资源
+        notfiles                   : {},
+        notfilea                   : []
     }
     // manifest信息json
     manifest
@@ -118,6 +122,33 @@ export class ManifestProcessor {
             throw new Error("[vite-plugin-vue-crx3 error] Input for a Chrome extension manifest must have filename 'manifest.json'.(In vite.config.js/build.rollupOptions.input)")
         }
         return manifestPath
+    }
+    /**
+     * 解析资源，处理路径不存在的资源
+     * @param {*} source 
+     * @returns 
+     */
+    resolveId (source) {
+        if (!canDo(source)) {
+            let uuid = uniqueId()
+            this.cache.notfilea.push(`filenotfound${uuid}`)
+            this.cache.notfiles[`filenotfound${uuid}`] = source
+            return `filenotfound${uuid}`
+        }
+        return null
+    }
+    /**
+     * 处理路径不存在的资源
+     * @param {*} id 
+     * @returns 
+     */
+    loadSource (id) {
+        if (this.cache.notfilea.indexOf(id)>-1) {
+            console.error('\n', chalk.yellow('[vite-plugin-vue-crx3 error] file not found：'), chalk.red(`${this.cache.notfiles[id]}`))
+            throw new Error(`${this.cache.notfiles[id]} : file not found!`)
+        } else {
+            return null
+        }
     }
     /**
      * 解析入口文件配置并返回
