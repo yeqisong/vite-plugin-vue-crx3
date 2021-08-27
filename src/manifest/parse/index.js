@@ -25,7 +25,7 @@ export const deriveFiles = (manifest, srcDir) => {
     // 循环获取web_accessible_resources中的静态资源，在打包时作为多文件打包的入口之一
     const web_accessible_resources = get(manifest, 'web_accessible_resources', []).reduce(
         (res_path, ress) => {
-            ress.resources.reduce(
+            return ress.resources.reduce(
                 (farr, f) => {
                     // f中存在magic变量（匹配符）
                     if (hasMagic(f)) {
