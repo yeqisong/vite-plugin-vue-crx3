@@ -16,5 +16,9 @@ export const entryDef = {
         manifest: [],
         dist    : [],
         dir     : 'content'
+    },
+    // web_accessible_resources的位置
+    webres: {
+        dist: []
     }
 }

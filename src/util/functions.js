@@ -1,4 +1,7 @@
 import { relative } from 'path'
+import get from 'lodash.get'
+import { hasMagic, sync as globsync } from 'glob'
+
 export function slash1 (path) {
     if (!path) { return path }
     const isExtendedLengthPath = /^\\\\\?\\/.test(path)
@@ -73,3 +76,26 @@ export const removeFileExtension = filePath => {
  * @returns
  */
 export const findChunkByName = (name, bundle) => Object.values(bundle).find(b => b.name && relative(slash1(name), slash1(b.name)) === '' && b.type === 'chunk')
+
+/**
+ * 从mainfest.json中解析web_accessible_resources
+ * @param {*} manifest
+ * @param {*} srcDir
+ * @returns
+ */
+export const getRes4Webaccessres = (manifest, srcDir) => get(manifest, 'web_accessible_resources', []).reduce(
+    (res_path, ress) => ress.resources.reduce(
+        (farr, f) => {
+            // f中存在magic变量（匹配符）
+            if (hasMagic(f)) {
+                // 获取匹配的全部静态资源
+                const files = globsync(f, { cwd: srcDir })
+                return [...farr, ...files.map(x => x.replace(srcDir, ''))]
+            } else { // 如果没有匹配符，则把数组中文件路径全部获取
+                return [...farr, f]
+            }
+        },
+        res_path
+    ),
+    []
+)

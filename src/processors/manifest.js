@@ -7,6 +7,7 @@ import { cloneObject } from '../util/functions'
 import { BackgroundProcessor } from './background'
 import { ContentScriptProcessor } from './content'
 import { PermissionProcessor } from './permission'
+import { WebresProcessor } from './webres'
 import { deriveFiles } from '../manifest/parse'
 import { input2kuFunction } from '../manifest/input2kvfun'
 import { getAssets, getChunk } from '../util/bundle'
@@ -55,6 +56,7 @@ export class ManifestProcessor {
         this.permissionProcessor = new PermissionProcessor()
         this.backgroundProcessor = new BackgroundProcessor(options)
         this.htmlProcessor = new HtmlProcessor()
+        this.webresProcessor = new WebresProcessor()
     }
     /**
      * 根据vite.config配置加载manifest文件并解析
@@ -191,6 +193,7 @@ export class ManifestProcessor {
         this.backgroundProcessor.distDir(inputs, this.manifest)
         // 修正核心入口文件位置(contentjs[])
         this.contentScriptProcessor.distDir(inputs, this.manifest)
+        this.webresProcessor.distDir(inputs, this.manifest, this.options.srcDir)
         // 记录html入口文件
         this.cache.html = html
         // 修正核心入口文件位置（html)
@@ -260,6 +263,8 @@ export class ManifestProcessor {
         await this.contentScriptProcessor.generateBundleFromDynamicImports(plugin, bundle, this.cache.dynamicImportContentScripts)
         // 处理backround.js
         await this.backgroundProcessor.generateBundle(plugin, bundle, this.manifest)
+        // 处理web_res中js全部处理为iife(主要针对于inject.js)
+        await this.webresProcessor.generateBundle(plugin, bundle, this.manifest)
         // 生成manifest.json文件
         validateManifest(this.manifest)
         this._generateManifest(plugin, this.manifest)

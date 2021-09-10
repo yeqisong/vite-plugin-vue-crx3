@@ -1,4 +1,5 @@
 import { relative } from 'path'
+import { slash1 } from '../util/functions'
 /**
  * 将input数组中的文件转为key-value格式的函数
  * @param {*} srcDir 根目录
@@ -19,6 +20,6 @@ export const input2kuFunction = srcDir => {
             )
         }
         // 返回当前file的kv到kv结果中
-        return { ...inputkv, [name]: file }
+        return { ...inputkv, [slash1(name)]: file }
     }
 }

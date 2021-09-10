@@ -6,7 +6,7 @@ import { moveAndDelFile } from '../util/dir'
 export class HtmlProcessor {
     // 统一入口文件的输出格式
     _distName (filename) {
-        return filename.replace('/', '_')
+        return slash1(filename).replace('/', '_')
     }
     /**
      * 修改manifest下全部html入口文件到outDir根目录
