@@ -24,7 +24,7 @@ export class HtmlProcessor {
             }
         })(
             ['action.default_popup', manifest.action?.default_popup],
-            ['options', manifest.options_page],
+            ['options_page', manifest.options_page],
             ['options_ui.page', manifest.options_ui?.page],
             ['devtools_page', manifest.devtools_page],
             ['chrome_url_overrides.bookmarks', manifest.chrome_url_overrides?.bookmarks],
